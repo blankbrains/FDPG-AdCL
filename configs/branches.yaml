@@ -1,0 +1,38 @@
+variants:
+  RGCSF:
+    temperature: 0.2
+    phase_epsilon: 0.2
+    pgd_step_size: 0.05
+    scoring: hybrid
+    hybrid_mix_weight: 0.5
+    channel_features_dim: 16
+    channel_loss_weight: 0.5
+    channel_sparse_ratio: 0.1
+    max_train_windows: 16384
+    max_validation_windows: 4096
+  FPLIR:
+    temperature: 0.2
+    phase_epsilon: 0.2
+    phase_perturbation_mode: uniform
+    adversarial_ramp_epochs: 0
+    ema_decay: 0.0
+    pgd_step_size: 0.05
+    num_epochs: 30
+    patience: 8
+    max_train_windows: 8192
+    max_validation_windows: 2048
+    fplir_hidden_dim: 64
+    fplir_token_dim: 32
+    fplir_spectral_patch_size: 32
+    fplir_spectral_hop: 8
+    fplir_mask_ratio: 0.15
+    fplir_context_weight: 0.25
+    fplir_smooth_l1_beta: 1.0
+    fplir_identity_weight: 0.15
+    fplir_idempotence_weight: 0.3
+    fplir_idempotence_token_weight: 1.0
+    fplir_contrastive_weight: 0.2
+    fplir_contrastive_variance_target: 0.05
+    fplir_contrastive_variance_weight: 0.1
+    fplir_channel_topk_ratio: 0.1
+    fplir_pgd_steps: 1

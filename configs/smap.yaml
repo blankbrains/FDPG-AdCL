@@ -1,0 +1,52 @@
+dataset: smap
+data_root: datasets/SMAP
+in_channels: 25
+window_size: 200
+stride: 1
+eval_stride: 1
+mid_channels: 16
+head: mlp
+features_dim: 64
+batch_size: 32
+num_workers: 0
+num_epochs: 40
+learning_rate: 0.0005
+min_learning_rate: 1.0e-06
+weight_decay: 0.01
+temperature: 0.4
+noise_sigma: 0.005
+phase_epsilon: 0.3
+segment_length: 32
+pgd_steps: 3
+pgd_step_size: 0.1
+variance_weight: 0.1
+variance_target: 0.05
+min_embedding_std: 0.005
+min_effective_rank: 1.5
+scoring: knn
+k: 5
+threshold_percentile: 95
+patience: 10
+grad_clip: 1.0
+seed: 42
+reference_limit: 4096
+train_fraction: 0.5
+post_train_blocks: 2
+fplir_score_weights:
+- 0.0
+- 0.0
+- 0.3
+warmup_epochs: 0
+warmup_start_factor: 0.1
+global_per_channel_width: 8
+paper_pipeline:
+  maximum_local_weight: 0.75
+  shift_scale: 20.0
+  exponent: 4.0
+  patch_size: 16
+  hop_size: 8
+  frequency_bins: 8
+  neighbor_count: 8
+  boundary_strength: 0.25
+  boundary_sigma: 0.01
+  threshold_percentile: 97.0

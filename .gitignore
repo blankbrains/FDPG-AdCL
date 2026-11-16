@@ -1,0 +1,23 @@
+# Credentials and local configuration
+.env
+.env.*
+*.env
+*.pem
+*.key
+
+# Local environments, caches and generated files
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.cache/
+.runtime/
+datasets/
+outputs/
+checkpoints/
+logs/
+*.pt
+*.pth
+*.npz
+*.log
