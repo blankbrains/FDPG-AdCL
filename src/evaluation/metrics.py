@@ -3,7 +3,7 @@ import math
 from typing import List, Tuple, Dict, Optional
 from sklearn.metrics import auc, precision_recall_curve, roc_auc_score
 
-from get_f1_score import calc_p2p, point_adjust
+from src.evaluation.get_f1_score import calc_p2p, point_adjust
 
 AUTO_RANGE_WINDOW_CAP = 250
 

@@ -8,12 +8,12 @@ import numpy as np
 import torch
 from sklearn.covariance import LedoitWolf
 
-from enhanced_scoring import (
+from src.scoring.enhanced_scoring import (
     _raw_relation_window_scores,
     robust_location_scale,
     validate_regime_memory,
 )
-from scoring import aggregate_window_scores
+from src.scoring.scoring import aggregate_window_scores
 
 
 CHANNEL_METHOD = "regime_channel_prototype_v1"

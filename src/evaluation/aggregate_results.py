@@ -9,7 +9,7 @@ from pathlib import Path
 
 import numpy as np
 
-from metrics import FORMAL_METRICS, compute_all_metrics
+from src.evaluation.metrics import FORMAL_METRICS, compute_all_metrics
 
 
 @dataclass(frozen=True)

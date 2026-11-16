@@ -11,9 +11,9 @@ from typing import Any
 import numpy as np
 import torch
 
-from data.dataset import WindowDataset
-from data.preprocess import CausalImputer, StandardScaler
-from eval_full import (
+from src.data.dataset import WindowDataset
+from src.data.preprocess import CausalImputer, StandardScaler
+from src.evaluation.eval_full import (
     aggregate_block_scores,
     compute_entity_metrics,
     load_dataset,
@@ -21,11 +21,11 @@ from eval_full import (
     save_score_artifact,
     slice_test_blocks,
 )
-from fplir_scoring import aggregate_local_scores
-from metrics import FORMAL_METRICS
-from models.fplir import build_fplir_from_config
-from models.loading import load_checkpoint_file
-from train_fplir import score_dataset
+from src.scoring.fplir_scoring import aggregate_local_scores
+from src.evaluation.metrics import FORMAL_METRICS
+from src.models.fplir import build_fplir_from_config
+from src.models.loading import load_checkpoint_file
+from src.training.train_fplir import score_dataset
 
 
 def load_fplir_checkpoint(

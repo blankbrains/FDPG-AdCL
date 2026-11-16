@@ -9,7 +9,7 @@ import torch
 from sklearn.cluster import KMeans
 from sklearn.covariance import LedoitWolf
 
-from scoring import fit_score_statistics, robust_location_scale, score_embeddings
+from src.scoring.scoring import fit_score_statistics, robust_location_scale, score_embeddings
 
 
 REGIME_METHOD = "training_only_regime_memory_v1"

@@ -9,20 +9,20 @@ from pathlib import Path
 
 import numpy as np
 
-from aggregate_results import load_calibrated_score_artifact
-from data.loading import load_dataset
-from data.preprocess import CausalImputer, StandardScaler
-from eval_full import resolve_checkpoint_split, save_score_artifact, slice_test_blocks
-from frequency_patch_graph import (
+from src.evaluation.aggregate_results import load_calibrated_score_artifact
+from src.data.loading import load_dataset
+from src.data.preprocess import CausalImputer, StandardScaler
+from src.evaluation.eval_full import resolve_checkpoint_split, save_score_artifact, slice_test_blocks
+from src.graph.frequency_patch_graph import (
     fit_frequency_patch_graph,
     score_frequency_patch_graph,
 )
-from models.loading import load_checkpoint_file
-from graph_artifact_contract import (
+from src.models.loading import load_checkpoint_file
+from src.graph.graph_artifact_contract import (
     GRAPH_FIT_SCOPE, GRAPH_PROTOCOL, GRAPH_STATE_PROTOCOL,
     array_sha256, file_sha256, save_graph_state,
 )
-from scoring import aggregate_block_scores
+from src.scoring.scoring import aggregate_block_scores
 
 
 def derive(args: argparse.Namespace) -> Path:

@@ -31,14 +31,14 @@ from torch.optim.lr_scheduler import (
 )
 from torch.utils.data import DataLoader, Subset
 
-from data.dataset import ContrastiveWindowDataset, WindowDataset
-from data.freq_hard_neg import FreqPhaseHardNeg
-from data.loading import load_feature_pair
-from data.preprocess import CausalImputer, StandardScaler
-from data.splitting import UnifiedTemporalSplit, split_full_series
-from losses import AdCLFDV3Loss
-from models import ContrastiveModel, load_checkpoint_file
-from scoring import (
+from src.data.dataset import ContrastiveWindowDataset, WindowDataset
+from src.data.freq_hard_neg import FreqPhaseHardNeg
+from src.data.loading import load_feature_pair
+from src.data.preprocess import CausalImputer, StandardScaler
+from src.data.splitting import UnifiedTemporalSplit, split_full_series
+from src.losses import AdCLFDV3Loss
+from src.models import ContrastiveModel, load_checkpoint_file
+from src.scoring.scoring import (
     calibrate_point_threshold,
     fit_score_statistics,
     score_embeddings,
@@ -75,7 +75,7 @@ def load_config(
     selected_variant = str(
         variant if variant is not None else config.get("experiment_variant", "RGCSF")
     )
-    variant_path = Path(__file__).resolve().parents[1] / "configs" / "branches.yaml"
+    variant_path = Path(__file__).resolve().parents[2] / "configs" / "branches.yaml"
     if selected_variant:
         if not variant_path.is_file():
             raise FileNotFoundError(f"Experiment variant file not found: {variant_path}")

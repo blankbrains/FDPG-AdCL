@@ -10,9 +10,9 @@ from typing import Any
 
 import numpy as np
 
-from aggregate_results import CalibratedScoreArtifact, load_calibrated_score_artifact
-from data.splitting import UnifiedTemporalSplit, split_full_series
-from frequency_patch_graph import FrequencyPatchGraphState
+from src.evaluation.aggregate_results import CalibratedScoreArtifact, load_calibrated_score_artifact
+from src.data.splitting import UnifiedTemporalSplit, split_full_series
+from src.graph.frequency_patch_graph import FrequencyPatchGraphState
 
 
 GRAPH_PROTOCOL = "frequency_patch_dynamic_sparse_graph_normal_source_v3"

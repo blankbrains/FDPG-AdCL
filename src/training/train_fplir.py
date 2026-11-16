@@ -15,7 +15,7 @@ import torch.nn.functional as F
 from torch import nn
 from torch.utils.data import DataLoader
 
-from adcl_pretext import (
+from src.training.adcl_pretext import (
     adversarial_ramp_scale,
     atomic_text_write,
     atomic_torch_save,
@@ -33,18 +33,18 @@ from adcl_pretext import (
     set_seed,
     update_ema_model,
 )
-from data.dataset import WindowDataset
-from data.freq_hard_neg import FreqPhaseHardNeg
-from data.preprocess import CausalImputer, StandardScaler
-from data.splitting import UnifiedTemporalSplit
-from fplir_scoring import (
+from src.data.dataset import WindowDataset
+from src.data.freq_hard_neg import FreqPhaseHardNeg
+from src.data.preprocess import CausalImputer, StandardScaler
+from src.data.splitting import UnifiedTemporalSplit
+from src.scoring.fplir_scoring import (
     aggregate_local_scores,
     fit_component_statistics,
     fuse_components,
     point_components,
 )
-from models.fplir import FPLIRModel
-from models.loading import load_checkpoint_file
+from src.models.fplir import FPLIRModel
+from src.models.loading import load_checkpoint_file
 
 
 def _fplir_config(config: dict[str, Any]) -> dict[str, Any]:

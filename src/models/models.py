@@ -6,7 +6,7 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-from models.resent_time import ResNetRepresentation
+from src.models.resent_time import ResNetRepresentation
 
 
 class ContrastiveModel(nn.Module):

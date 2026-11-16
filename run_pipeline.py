@@ -11,8 +11,6 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parent
-SOURCE_ROOT = ROOT / "src"
-sys.path.insert(0, str(SOURCE_ROOT))
 DATASETS = ("msl", "smap", "smd", "swat", "psm")
 
 
@@ -60,7 +58,7 @@ def resolve_entities(dataset: str, data_root: Path, entity: str | None) -> list[
 
 def build_stages(args: argparse.Namespace, entities: list[str | None]) -> list[dict]:
     """Compose stage CLIs using the manuscript dataset-specific parameter table."""
-    from adcl_pretext import load_config
+    from src.training.adcl_pretext import load_config
 
     resolved = load_config(args.config, variant="FPLIR")
     parameters = resolved["paper_pipeline"]
@@ -73,7 +71,7 @@ def build_stages(args: argparse.Namespace, entities: list[str | None]) -> list[d
 
     def add(name: str, script: str, arguments: list) -> None:
         stages.append({"name": name, "command": [sys.executable, "-B", "-X", "utf8",
-                                               str(SOURCE_ROOT / script), *map(str, arguments)]})
+                                               "-m", script, *map(str, arguments)]})
 
     for index, entity in enumerate(entities):
         safe_name = entity or "default"
@@ -84,23 +82,23 @@ def build_stages(args: argparse.Namespace, entities: list[str | None]) -> list[d
         encoder_dir = output / "checkpoints" / "encoder" / safe_name
         local_dir = output / "checkpoints" / "local" / safe_name
         rgcsf_path = output / "checkpoints" / "rgcsf" / safe_name / "model.pt"
-        add(f"encoder_{index}", "adcl_pretext.py",
+        add(f"encoder_{index}", "src.training.adcl_pretext",
             [*train_args, "--variant", "RGCSF", *entity_args, "--output-dir", encoder_dir])
-        add(f"rgcsf_{index}", "derive_rgcsf_checkpoint.py",
+        add(f"rgcsf_{index}", "src.evaluation.derive_rgcsf_checkpoint",
             ["--source-checkpoint", encoder_dir / "best_model.pt", *data_args,
              "--device", args.device, "--output", rgcsf_path])
-        add(f"global_scores_{index}", "eval_full.py",
+        add(f"global_scores_{index}", "src.evaluation.eval_full",
             ["--checkpoint", rgcsf_path, *data_args, "--device", args.device,
              "--output", output / "global" / "entities" / f"{safe_name}.json",
              "--scores-output", global_root / args.dataset / f"{safe_name}.npz", "--defer-metrics"])
-        add(f"local_train_{index}", "train_fplir.py",
+        add(f"local_train_{index}", "src.training.train_fplir",
             [*train_args, "--variant", "FPLIR", *entity_args, "--output-dir", local_dir])
-        add(f"local_scores_{index}", "eval_fplir.py",
+        add(f"local_scores_{index}", "src.evaluation.eval_fplir",
             ["--checkpoint", local_dir / "best_model.pt", *data_args, "--device", args.device,
              "--output", output / "local" / "entities" / f"{safe_name}.json",
              "--scores-output", local_root / args.dataset / f"{safe_name}.npz", "--defer-metrics"])
 
-    add("base_fusion", "gated_fplir_ensemble.py",
+    add("base_fusion", "src.evaluation.gated_fplir_ensemble",
         ["--global-root", global_root, "--local-root", local_root,
          "--output", output / "base", "--defer-metrics",
          "--maximum-local-weight", parameters["maximum_local_weight"],
@@ -108,7 +106,7 @@ def build_stages(args: argparse.Namespace, entities: list[str | None]) -> list[d
     for index, entity in enumerate(entities):
         safe_name = entity or "default"
         entity_args = ["--entity", entity] if entity is not None else []
-        add(f"graph_{index}", "derive_frequency_patch_graph_scores.py",
+        add(f"graph_{index}", "src.graph.derive_frequency_patch_graph_scores",
             ["--checkpoint", output / "checkpoints" / "local" / safe_name / "best_model.pt",
              "--dataset", args.dataset, "--data-root", args.data_root, *entity_args,
              "--base-scores", base_root / args.dataset / f"{safe_name}.npz",
@@ -116,7 +114,7 @@ def build_stages(args: argparse.Namespace, entities: list[str | None]) -> list[d
              "--patch-size", parameters["patch_size"], "--hop-size", parameters["hop_size"],
              "--frequency-bins", parameters["frequency_bins"],
              "--neighbor-count", parameters["neighbor_count"]])
-    add("boundary_fusion", "evaluate_threshold_channel_diagnostic.py",
+    add("boundary_fusion", "src.evaluation.evaluate_threshold_channel_diagnostic",
         ["--base-root", base_root, "--channel-root", graph_root,
          "--output", output / "final", "--mode", "boundary",
          "--boundary-strength", parameters["boundary_strength"],
@@ -127,8 +125,8 @@ def build_stages(args: argparse.Namespace, entities: list[str | None]) -> list[d
 
 def validate_data(args: argparse.Namespace, entities: list[str | None], channels: int,
                   window_size: int) -> None:
-    from data.loading import load_dataset
-    from data.splitting import split_full_series
+    from src.data.loading import load_dataset
+    from src.data.splitting import split_full_series
 
     for entity in entities:
         train, test, _, _ = load_dataset(args.dataset, args.data_root, entity=entity,
@@ -163,7 +161,7 @@ def execute_stages(stages: list[dict], output: Path, metadata: dict) -> None:
             log_path = log_root / (stage["name"] + ".log")
             print(f"Running {stage['name']} | log {log_path}", flush=True)
             with log_path.open("w", encoding="utf-8") as log:
-                subprocess.run(stage["command"], cwd=SOURCE_ROOT, env=environment,
+                subprocess.run(stage["command"], cwd=ROOT, env=environment,
                                stdout=log, stderr=subprocess.STDOUT, check=True)
             state["completed"].append(stage["name"])
             save()
@@ -180,7 +178,7 @@ def execute_stages(stages: list[dict], output: Path, metadata: dict) -> None:
 def main() -> int:
     parser = build_parser()
     args = parser.parse_args()
-    from adcl_pretext import load_config
+    from src.training.adcl_pretext import load_config
     import torch
 
     args.data_root = args.data_root.expanduser().resolve()

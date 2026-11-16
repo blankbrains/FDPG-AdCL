@@ -23,6 +23,17 @@ python -B run_pipeline.py --help
 
 The pipeline defaults to CUDA. Use --device cpu for CPU execution; full training may be slow.
 
+## Dataset sources
+
+| Dataset | Original provider | Access |
+| --- | --- | --- |
+| MSL / SMAP | [Telemanom](https://github.com/khundman/telemanom) | Follow the provider's download instructions |
+| SMD | [OmniAnomaly](https://github.com/NetManAIOps/OmniAnomaly) | Use the Server Machine Dataset |
+| PSM | [RANSynCoders](https://github.com/eBay/RANSynCoders) | Follow the dataset instructions in the repository |
+| SWaT | [iTrust, SUTD](https://www.sutd.edu.sg/itrust/itrust-labs/datasets/) | Request access and comply with the provider's usage conditions |
+
+This repository distributes source code and configurations. Download or request datasets from their original providers; dataset files are not redistributed here.
+
 ## Dataset layout
 
 Pass the directory of the individual dataset to --data-root.
@@ -84,10 +95,13 @@ FDPG-AdCL/
     ├── data/
     ├── models/
     ├── losses/
-    └── training, scoring, fusion and metric modules
+    ├── training/      global encoder and local-model training
+    ├── scoring/       shared, global and local score functions
+    ├── graph/         frequency-patch graph fitting and scoring
+    └── evaluation/    checkpoint derivation, inference, fusion and metrics
 ```
 
-src/aggregate_results.py provides score loading and entity aggregation. src/evaluate_threshold_channel_diagnostic.py implements the final fusion and evaluation used by the runner. These modules are runtime dependencies.
+src/evaluation/aggregate_results.py provides score loading and entity aggregation. src/evaluation/evaluate_threshold_channel_diagnostic.py implements the final fusion and evaluation used by the runner. These modules are runtime dependencies.
 
 Each run produces checkpoints/, global/, local/, base/, graph/, final/, logs/ and run_state.json. The final dataset report is final/datasets/<dataset>_metrics.json. run_state.json records resolved configurations, commands, completed stages and errors.
 
@@ -98,3 +112,12 @@ Core CPU tests and stage argument checks passed during preparation. The archive 
 ## Manuscript parameter mapping
 
 The five dataset YAMLs contain the local score weights, encoder warmup settings and per-channel stem width from Table A.1. Their paper_pipeline section supplies base-fusion, graph and final boundary-fusion settings to run_pipeline.py. MSL uses an encoder FFT segment length of 16. Common branch settings do not override the dataset-specific local weights. Use the unified entry point to apply all of these values; individual stage CLIs retain their generic defaults unless explicitly overridden. Each invocation performs one seed; run three distinct seeds into separate output directories and average the resulting per-dataset metrics to obtain a three-run mean. The historical experiment seeds and numerical results are not reconstructed by this package.
+
+Stage modules use package imports. Run individual stages from the repository root with module syntax, for example:
+
+```bash
+python -B -m src.training.adcl_pretext --help
+python -B -m src.graph.derive_frequency_patch_graph_scores --help
+python -B -m src.evaluation.evaluate_threshold_channel_diagnostic --help
+```
+The recommended entry remains run_pipeline.py, which applies all dataset-specific manuscript settings.

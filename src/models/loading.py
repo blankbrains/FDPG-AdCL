@@ -8,7 +8,7 @@ from typing import Any
 
 import torch
 
-from models.models import ContrastiveModel
+from src.models.models import ContrastiveModel
 
 
 REQUIRED_MODEL_CONFIG = frozenset({"architecture", "in_channels", "mid_channels", "head", "features_dim", "window_size"})

@@ -8,13 +8,13 @@ from pathlib import Path
 
 import numpy as np
 
-from aggregate_results import (
+from src.evaluation.aggregate_results import (
     aggregate_entity_scores,
     load_calibrated_score_artifact,
 )
-from scoring import _validation_ecdf
-from eval_full import save_score_artifact
-from metrics import FORMAL_METRICS, compute_all_metrics
+from src.scoring.scoring import _validation_ecdf
+from src.evaluation.eval_full import save_score_artifact
+from src.evaluation.metrics import FORMAL_METRICS, compute_all_metrics
 
 
 def fuse_validation_aligned_scores(
