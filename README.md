@@ -119,7 +119,7 @@ Each run produces checkpoints/, global/, local/, base/, graph/, final/, logs/ an
 
 ## Configuration and repeated runs
 
-The five dataset YAMLs contain the local score weights, encoder warmup settings and per-channel stem width from Table A.1. Their paper_pipeline section supplies base-fusion, graph and final boundary-fusion settings to run_pipeline.py. MSL uses an encoder FFT segment length of 16. Use the unified entry point to apply all of these values; individual stage CLIs retain their generic defaults unless explicitly overridden. Each invocation performs one seed; run three distinct seeds into separate output directories and average the resulting per-dataset metrics to obtain a three-run mean.
+The five dataset files in [configs/](configs/) specify the local score weights, encoder warmup settings, and per-channel stem width. Each file also defines the base-fusion, graph, and boundary-fusion settings that `run_pipeline.py` reads from its `paper_pipeline` section. MSL uses an encoder FFT segment length of 16. Use the unified entry point to apply all of these values; individual stage CLIs retain their generic defaults unless explicitly overridden. Each invocation performs one seed; run three distinct seeds into separate output directories and average the resulting per-dataset metrics to obtain a three-run mean.
 
 Stage modules use package imports. Run individual stages from the repository root with module syntax, for example:
 

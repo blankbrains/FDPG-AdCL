@@ -57,7 +57,7 @@ def resolve_entities(dataset: str, data_root: Path, entity: str | None) -> list[
 
 
 def build_stages(args: argparse.Namespace, entities: list[str | None]) -> list[dict]:
-    """Compose stage CLIs using the manuscript dataset-specific parameter table."""
+    """Compose stage commands from the selected dataset configuration."""
     from src.training.adcl_pretext import load_config
 
     resolved = load_config(args.config, variant="FPLIR")
